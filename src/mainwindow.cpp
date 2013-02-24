@@ -53,6 +53,7 @@ void MainWindow::initialActionsIcons()
   /* generic icons */
   ui->actionNew->setIcon  ( QIcon::fromTheme("document-new") );
   ui->actionOpen->setIcon ( QIcon::fromTheme("document-open") );
+  ui->actionOpenUrl->setIcon ( QIcon::fromTheme("download") );
   ui->actionSave->setIcon ( QIcon::fromTheme("document-save") );
   ui->actionSaveAs->setIcon ( QIcon::fromTheme("document-save-as") );
   ui->actionClose->setIcon( QIcon::fromTheme("document-close") );
@@ -90,6 +91,7 @@ void MainWindow::initialActions()
   initialActionsShortcuts();
 
   connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(openDocumentAction()));
+  connect(ui->actionOpenUrl, SIGNAL(triggered()), this, SLOT(openUrlDocumentAction()));
   connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(saveDocumentAction()));
   connect(ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(saveAsDocumentAction()));
   connect(ui->actionProperties, SIGNAL(triggered()), this, SLOT(propertiesAction()));
@@ -109,6 +111,9 @@ void MainWindow::initialActions()
   // view
   connect( ui->actionCollapseAll, SIGNAL(triggered()), this, SLOT(collapseAll()) );
   connect( ui->actionExpandAll, SIGNAL(triggered()), this, SLOT(expandAll()) );
+
+  // url
+  connect(this, SIGNAL(urlGrabbed(QString)), this, SLOT(downloadUrlDocument(QString)));
 
   // FIXME: it's a temporary
   ui->actionNew->setVisible( false );
@@ -269,6 +274,38 @@ void MainWindow::openDocumentAction()
     loadDocument ( selectedFileName );
   else
     openDocumentInNewWindow ( selectedFileName );
+}
+void MainWindow::openUrlDocumentAction()
+{
+  UrlDialog* dialog;
+  dialog = new UrlDialog(this);
+
+  QString url = dialog->getUrl();
+  emit urlGrabbed(url);
+}
+void MainWindow::downloadUrlDocument(QString urlName)
+{
+  if ( urlName.isEmpty() ) {
+    QMessageBox::information( this, tr("XMLer"), tr("Job cancelled.") );
+    return;
+  }
+  downLoader = new XMLerLoadUrlThread(this);
+  downLoader->setUrl(urlName);
+  connect(downLoader, SIGNAL(urlDownloaded(int, QString, QString)), \
+    this, SLOT(openUrlDocument(int, QString, QString)));
+  downLoader->start();
+  disconnect(downLoader, SIGNAL(urlDownloaded(int, QString, QString)));
+}
+void MainWindow::openUrlDocument(int c, QString fileName, QString msg)
+{
+  QMessageBox::information( this, tr("XMLer"), tr(msg.toLocal8Bit().data()) );
+  if (c == 0)
+    {
+      if ( isEmptyDocument() )
+        loadDocument ( fileName );
+      else
+        openDocumentInNewWindow ( fileName );
+    }
 }
 void MainWindow::closeDocumentAction()
 {

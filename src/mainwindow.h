@@ -25,6 +25,8 @@
 #include "xmlerexception.h"
 #include "documentpropertiesdialog.h"
 #include "xmlerfindwidget.h"
+#include "urldialog.h"
+#include "xmlerloadurlthread.h"
 
 namespace Ui {
   class MainWindow;
@@ -39,6 +41,9 @@ public:
   bool loadDocument( QString fileName );
   bool saveDocument( QString fileName );
   bool isEmptyDocument () const;
+
+signals:
+  void urlGrabbed(QString url);
   
 private:
   Ui::MainWindow *ui;
@@ -48,6 +53,7 @@ private:
   QProgressDialog *progressDialog;
   QDockWidget *findDock;
   XMLerFindWidget *findWidget;
+  XMLerLoadUrlThread *downLoader;
   
   qint64 _progress_max;
   qint64 _progress_pos;
@@ -70,6 +76,9 @@ private:
 private slots:
   /* File menu slots */
   void openDocumentAction();
+  void openUrlDocumentAction();
+  void downloadUrlDocument(QString urlName);
+  void openUrlDocument(int c, QString fileName, QString msg);
   bool saveDocumentAction();
   bool saveAsDocumentAction();
   void closeDocumentAction();

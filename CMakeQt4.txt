@@ -1,5 +1,5 @@
 set (QT_USE_QTXML TRUE)
-set (QT_USE_QTNETWORK FALSE)
+set (QT_USE_QTNETWORK TRUE)
 
 if (WIN32)
   find_package (Qt4 COMPONENTS QtMain QtCore QtGui QtXml REQUIRED)

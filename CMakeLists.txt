@@ -54,7 +54,9 @@ set (HEADERS
   src/elementxmlnode.h
   src/documentxmlnode.h
   src/attrxmlnode.h
-  src/dataxmlnode.h)
+  src/dataxmlnode.h
+  src/urldialog.h
+  src/xmlerloadurlthread.h)
 set (SOURCES 
   main.cpp 
   src/xmlerapplication.cpp
@@ -73,7 +75,9 @@ set (SOURCES
   src/elementxmlnode.cpp
   src/documentxmlnode.cpp
   src/attrxmlnode.cpp
-  src/dataxmlnode.cpp)
+  src/dataxmlnode.cpp
+  src/urldialog.cpp
+  src/xmlerloadurlthread.cpp)
 set (FORMS 
   forms/mainwindow.ui
   forms/documentpropertiesdialog.ui)
@@ -188,7 +192,7 @@ endif ( APPLE )
 if ( WIN32 )
     message ( STATUS ${QT_BINARY_DIR} )
     set ( CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE} )
-    set ( DLLS ${QT_BINARY_DIR}/QtCore4.dll ${QT_BINARY_DIR}/QtGui4.dll ${QT_BINARY_DIR}/QtXml4.dll )
+    set ( DLLS ${QT_BINARY_DIR}/QtCore4.dll ${QT_BINARY_DIR}/QtGui4.dll ${QT_BINARY_DIR}/QtXml4.dll ${QT_BINARY_DIR}/QtNetwork4.dll )
     install (TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX})
     install (FILES ${QM} DESTINATION translations)
     install (FILES ${QT_TRANS_FILES} DESTINATION translations)

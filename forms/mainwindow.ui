@@ -35,6 +35,7 @@
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
+    <addaction name="actionOpenUrl"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
     <addaction name="separator"/>
@@ -88,6 +89,7 @@
    </attribute>
    <addaction name="actionNew"/>
    <addaction name="actionOpen"/>
+   <addaction name="actionOpenUrl"/>
    <addaction name="actionSave"/>
    <addaction name="actionSaveAs"/>
    <addaction name="separator"/>
@@ -108,6 +110,11 @@
   <action name="actionOpen">
    <property name="text">
     <string>&amp;Open</string>
+   </property>
+  </action>
+  <action name="actionOpenUrl">
+   <property name="text">
+    <string>&amp;Open URL</string>
    </property>
   </action>
   <action name="actionNew">
