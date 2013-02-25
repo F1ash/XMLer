@@ -31,12 +31,6 @@ void UrlDialog::editComplete(QAbstractButton* button)
 	//qDebug(button->text().toLocal8Bit().data());
 	//qDebug(urlPath->text().toLocal8Bit().data());
 	//qDebug((this->parentWidget())->objectName().toLocal8Bit().data());
-	if (button != ok) urlPath->clear();
+	if (button == ok) emit urlGrabbed(urlPath->text());
 	this->done(0);
-}
-
-QString UrlDialog::getUrl()
-{
-	exec();
-	return urlPath->text();
 }

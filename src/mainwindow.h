@@ -41,9 +41,6 @@ public:
   bool loadDocument( QString fileName );
   bool saveDocument( QString fileName );
   bool isEmptyDocument () const;
-
-signals:
-  void urlGrabbed(QString url);
   
 private:
   Ui::MainWindow *ui;

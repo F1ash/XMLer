@@ -112,9 +112,6 @@ void MainWindow::initialActions()
   connect( ui->actionCollapseAll, SIGNAL(triggered()), this, SLOT(collapseAll()) );
   connect( ui->actionExpandAll, SIGNAL(triggered()), this, SLOT(expandAll()) );
 
-  // url
-  connect(this, SIGNAL(urlGrabbed(QString)), this, SLOT(downloadUrlDocument(QString)));
-
   // FIXME: it's a temporary
   ui->actionNew->setVisible( false );
 }
@@ -279,9 +276,9 @@ void MainWindow::openUrlDocumentAction()
 {
   UrlDialog* dialog;
   dialog = new UrlDialog(this);
-
-  QString url = dialog->getUrl();
-  emit urlGrabbed(url);
+  connect(dialog, SIGNAL(urlGrabbed(QString)), this, SLOT(downloadUrlDocument(QString)));
+  dialog->exec();
+  disconnect(dialog, SIGNAL(urlGrabbed(QString)));
 }
 void MainWindow::downloadUrlDocument(QString urlName)
 {

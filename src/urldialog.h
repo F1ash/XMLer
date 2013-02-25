@@ -17,6 +17,9 @@ class UrlDialog : public QDialog
         QPushButton* ok;
         QPushButton* cancel;
 
+    signals:
+        void urlGrabbed(QString url);
+
     private slots:
         void editComplete(QAbstractButton* button);
 };
