@@ -27,6 +27,7 @@
 #include "xmlerfindwidget.h"
 #include "urldialog.h"
 #include "xmlerloadurlthread.h"
+#include "textdialog.h"
 
 namespace Ui {
   class MainWindow;
@@ -108,6 +109,7 @@ private slots:
 
   void collapseAll();
   void expandAll();
+  void openEditor(const QModelIndex & index);
 };
 
 #endif

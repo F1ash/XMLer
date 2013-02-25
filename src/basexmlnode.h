@@ -24,6 +24,10 @@ public:
 
   void setParentNode(BaseXMLNode *p = 0);
   BaseXMLNode *parentNode() const;
+  QString _name;
+  QString _qName;
+  QString _namespaceURI;
+  Qt::CheckState _checkState;
 
   BaseXMLNode::XMLNodeType nodeType() const;                    // return node type
   int childIndex( BaseXMLNode *child ) const;                   // return child index
@@ -40,6 +44,7 @@ public:
   virtual QString name () const;                                // return display name of node
   virtual QString qName () const;                               // return qName
   virtual QString namespaceURI () const;                        // return namespace URI
+  virtual Qt::CheckState checkState () const;
 
 private:
   BaseXMLNode *_parentNode;

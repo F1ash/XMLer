@@ -8,6 +8,7 @@
 */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDebug>
 
 MainWindow::MainWindow (QWidget *parent, Qt::WindowFlags f) :
   QMainWindow(parent, f),
@@ -121,14 +122,18 @@ void MainWindow::initialTree()
   tree = new QTreeView( this );
   tree->setModel( model );
   tree->setRootIsDecorated( false );
+  tree->setEditTriggers(QAbstractItemView::DoubleClicked);
 
   /* tree signals */
   connect ( tree, SIGNAL(collapsed(QModelIndex)), this, SLOT(indexCollapsed(QModelIndex)) );
   connect ( tree, SIGNAL(expanded(QModelIndex)), this, SLOT(indexExpanded(QModelIndex)) );
 
+  //connect( tree, SIGNAL(activated(const QModelIndex &)), this, SLOT(openEditor(const QModelIndex &)));
+  //connect( tree, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(openEditor(const QModelIndex &)));
+  
   connect( model, SIGNAL(touchModel()), this, SLOT(modelTouched()));
   connect( model, SIGNAL(gotoBookmark(BaseXMLNode*)), this, SLOT(showFounded(BaseXMLNode*)) );
-  
+
   /* Loader signals */
   connect( model->loader(), SIGNAL(beginProgress(QString,qint64)), this, SLOT(beginProgressModel(QString,qint64)) );
   connect( model->loader(), SIGNAL(progress(qint64)), this, SLOT(progressModel(qint64)) );
@@ -439,4 +444,11 @@ void MainWindow::expandAll ()
 {
     tree->expandAll();
     resizeTreeColumns();
+}
+void MainWindow::openEditor(const QModelIndex & index)
+{
+  qDebug() << index.data( Qt::DisplayRole );
+  TextDialog* dialog = new TextDialog(this);
+  dialog->setCurrentIndex(index);
+  dialog->exec();
 }

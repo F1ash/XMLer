@@ -7,6 +7,7 @@
    Description:
 */
 #include "xmlermodel.h"
+#include <QDebug>
 
 XMLerModel::XMLerModel (QObject *parent):
   QAbstractItemModel(parent)
@@ -155,7 +156,8 @@ void XMLerModel::bookmarkToggle ( const QModelIndex &index )
 /* Virtuals */
 Qt::ItemFlags XMLerModel::flags(const QModelIndex &index) const
 {
-  Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
+  //Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
+  Qt::ItemFlags defaultFlags = (Qt::ItemIsEditable|Qt::ItemIsEnabled|Qt::ItemIsUserCheckable);
   return defaultFlags;
 }
 int XMLerModel::columnCount(const QModelIndex &parent) const
@@ -247,6 +249,11 @@ QVariant XMLerModel::data(const QModelIndex &index, int role) const
     else if ( index.column() == 1 )
         return stateNodeIcon( item );
   }
+  else if ( role == Qt::CheckStateRole ) {
+    if ( index.column() == 0 )
+        return item->checkState();
+    else return QVariant();
+  }
   /* CLEANIT: not needed more
   else if ( role == Qt::BackgroundRole ) {
     if ( foundedNodes.contains ( item ) )
@@ -271,7 +278,49 @@ int XMLerModel::rowCount(const QModelIndex &parent) const
 
   return 0;
 }
+bool XMLerModel::setData( const QModelIndex & index, const QVariant & value, int role = Qt::EditRole )
+{
+  if ( !index.isValid() )
+	{qDebug()<< "index fail";
+    return false;
+	};
 
+  BaseXMLNode *item = static_cast<BaseXMLNode *>(index.internalPointer());
+  if ( !item )
+	{qDebug()<< "item fail";
+    return false;
+	};
+
+  if ( role == Qt::EditRole ){
+    switch( index.column() ) {
+    case 0:
+      item->_qName = value.toString();
+      break;
+    case 2:
+      item->_name = value.toString();
+      break;
+    case 3:
+      item->_namespaceURI = value.toString();
+      break;
+    default:
+      break;
+    }
+  }
+  else if ( role == Qt::CheckStateRole ) {
+    if ( index.column() == 0 ) {
+      Qt::CheckState state;
+      if (value.toInt()) state = Qt::Checked;
+      else state = Qt::Unchecked;
+      item->_checkState = state;
+      }
+    else return false;
+  };
+  
+  qDebug()<< value.toString() << index.column() << index.data();
+  qDebug()<< item->_qName<< item->_name<< item->_namespaceURI<< item->_checkState;
+  emit dataChanged(index.parent(), index.child(1,1));
+  return true;
+}
 /* Self private */
 QIcon XMLerModel::stateNodeIcon ( BaseXMLNode *node ) const
 {
@@ -374,4 +423,3 @@ void XMLerModel::bookmarkPrev ()
 
     emit gotoBookmark ( bookmarkNodes.at( bookmark_current_position ) );
 }
-

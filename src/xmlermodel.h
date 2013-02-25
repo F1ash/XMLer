@@ -53,6 +53,7 @@ public:
   QModelIndex parent(const QModelIndex &child) const;
   QVariant data(const QModelIndex &index, int role) const;
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
+  bool setData( const QModelIndex & index, const QVariant & value, int role);
 
 private:
   DocumentXMLNode *_document;

@@ -13,6 +13,10 @@ BaseXMLNode::BaseXMLNode (BaseXMLNode *parent):
 {
   setParentNode(parent);
   setNodeType(BaseXMLNode::Unknown);
+  _name = QString();
+  _qName = QString();
+  _namespaceURI = QString();
+  _checkState = Qt::Checked;
 }
 
 BaseXMLNode::~BaseXMLNode ()
@@ -122,13 +126,20 @@ void BaseXMLNode::appendChild(BaseXMLNode *child)
 }
 QString BaseXMLNode::name () const
 {
-  return QString(); // return empty string
+  //return QString(); // return empty string
+  return _name;
 }
 QString BaseXMLNode::qName () const
 {
-  return QString();
+  //return QString();
+  return _qName;
 }
 QString BaseXMLNode::namespaceURI () const
 {
-  return QString();
+  //return QString();
+  return _namespaceURI;
+}
+Qt::CheckState BaseXMLNode::checkState () const
+{
+	return _checkState;
 }
