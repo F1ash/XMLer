@@ -4,9 +4,9 @@
 #include <QUrl>
 #include <QString>
 #include <QObject>
-#include <QDebug>
 #include <QTemporaryFile>
 #include <QThread>
+#include <QDir>
 
 class XMLerLoadUrlThread : public QThread
 {
