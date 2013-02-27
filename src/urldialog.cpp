@@ -1,14 +1,13 @@
 #include "urldialog.h"
-#include <QDebug>
 #include <QVBoxLayout>
-#include <QPushButton>
-#include <QDialogButtonBox>
 #include <Qt>
+#include <QApplication>
+#include <QDesktopWidget>
 
 UrlDialog::UrlDialog(QWidget* parent) : QDialog(parent)
 {
 	setModal(true);
-	QDialogButtonBox* buttons = new QDialogButtonBox;
+	buttons = new QDialogButtonBox;
 	buttons->setOrientation(Qt::Horizontal);
 	ok = buttons->addButton(QString(tr("Ok")), QDialogButtonBox::ActionRole);
 	cancel = buttons->addButton(QString(tr("Cancel")), QDialogButtonBox::ActionRole);
@@ -17,7 +16,10 @@ UrlDialog::UrlDialog(QWidget* parent) : QDialog(parent)
 	QVBoxLayout* layout = new QVBoxLayout(this);
 	layout->addWidget(urlPath);
 	layout->addWidget(buttons);
+	layout->setAlignment (Qt::AlignCenter);
 	this->setLayout(layout);
+	QDesktopWidget *d = QApplication::desktop();
+	this->setFixedWidth (2*d->width()/3);
 	this->setFocusProxy(urlPath);
 }
 
@@ -28,9 +30,7 @@ UrlDialog::~UrlDialog()
 
 void UrlDialog::editComplete(QAbstractButton* button)
 {
-	//qDebug(button->text().toLocal8Bit().data());
-	//qDebug(urlPath->text().toLocal8Bit().data());
-	//qDebug((this->parentWidget())->objectName().toLocal8Bit().data());
+	disconnect(buttons, SIGNAL(clicked(QAbstractButton*)));
 	if (button == ok) emit urlGrabbed(urlPath->text());
 	this->done(0);
 }

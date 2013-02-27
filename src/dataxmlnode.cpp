@@ -13,26 +13,10 @@ DataXMLNode::DataXMLNode (BaseXMLNode *parent):
 {
   setNodeType(BaseXMLNode::Data);
   _data.clear();
-  _qName = QString();
-  _localName = QString();
-  _namespaceURI = QString();
 }
 
 DataXMLNode::~DataXMLNode ()
 {
-}
-
-void DataXMLNode::setNamespaceURI( const QString &uri )
-{
-  _namespaceURI = uri;
-}
-void DataXMLNode::setLocalName( const QString &ln )
-{
-  _localName = ln;
-}
-void DataXMLNode::setQName( const QString &qn )
-{
-  _qName = qn;
 }
 
 void DataXMLNode::setData ( const QString &d )
@@ -59,13 +43,13 @@ void DataXMLNode::appendChild(BaseXMLNode *child)
 }
 QString DataXMLNode::name () const
 {
-  return _localName;
+  return QString();
 }
 QString DataXMLNode::qName () const
 {
-  return _qName;
+  return _data;
 }
 QString DataXMLNode::namespaceURI () const
 {
-  return _namespaceURI;
+  return QString();
 }

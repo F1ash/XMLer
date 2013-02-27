@@ -13,9 +13,6 @@ AttrXMLNode::AttrXMLNode (BaseXMLNode *parent):
 {
   setNodeType(BaseXMLNode::Attribute);
   _data = 0;
-  _qName = QString();
-  _localName = QString();
-  _namespaceURI = QString();
 }
 
 AttrXMLNode::~AttrXMLNode ()

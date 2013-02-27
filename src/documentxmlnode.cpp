@@ -121,22 +121,9 @@ QString DocumentXMLNode::name () const
 }
 QString DocumentXMLNode::qName () const
 {
-  return _qName;
+  return QString();
 }
 QString DocumentXMLNode::namespaceURI () const
 {
-  return _namespaceURI;
-}
-
-void DocumentXMLNode::setNamespaceURI( const QString &uri )
-{
-  _namespaceURI = uri;
-}
-void DocumentXMLNode::setLocalName( const QString &ln )
-{
-  _localName = ln;
-}
-void DocumentXMLNode::setQName( const QString &qn )
-{
-  _qName = qn;
+  return QString();
 }

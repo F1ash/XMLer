@@ -296,7 +296,7 @@ void MainWindow::downloadUrlDocument(QString urlName)
 }
 void MainWindow::openUrlDocument(int c, QString fileName, QString msg)
 {
-  QMessageBox::information( this, tr("XMLer"), tr(msg.toLocal8Bit().data()) );
+  //QMessageBox::information( this, tr("XMLer"), tr(msg.toLocal8Bit().data()) );
   if (c == 0)
     {
       if ( isEmptyDocument() )

@@ -4,6 +4,7 @@
 #include <QLineEdit>
 #include <QWidget>
 #include <QPushButton>
+#include <QDialogButtonBox>
 
 class UrlDialog : public QDialog
 {
@@ -16,6 +17,7 @@ class UrlDialog : public QDialog
         QLineEdit * urlPath;
         QPushButton* ok;
         QPushButton* cancel;
+        QDialogButtonBox* buttons;
 
     signals:
         void urlGrabbed(QString url);

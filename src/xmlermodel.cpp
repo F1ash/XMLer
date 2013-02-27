@@ -155,9 +155,9 @@ void XMLerModel::bookmarkToggle ( const QModelIndex &index )
 /* Virtuals */
 Qt::ItemFlags XMLerModel::flags(const QModelIndex &index) const
 {
-  //Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
-  Qt::ItemFlags defaultFlags = (Qt::ItemIsEnabled|Qt::ItemIsEditable);
-  return defaultFlags;
+  Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
+  Qt::ItemFlags flags = (defaultFlags | Qt::ItemIsEditable);
+  return flags;
 }
 int XMLerModel::columnCount(const QModelIndex &parent) const
 {
