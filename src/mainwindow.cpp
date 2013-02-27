@@ -8,7 +8,6 @@
 */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QDebug>
 
 MainWindow::MainWindow (QWidget *parent, Qt::WindowFlags f) :
   QMainWindow(parent, f),
@@ -128,9 +127,6 @@ void MainWindow::initialTree()
   connect ( tree, SIGNAL(collapsed(QModelIndex)), this, SLOT(indexCollapsed(QModelIndex)) );
   connect ( tree, SIGNAL(expanded(QModelIndex)), this, SLOT(indexExpanded(QModelIndex)) );
 
-  //connect( tree, SIGNAL(activated(const QModelIndex &)), this, SLOT(openEditor(const QModelIndex &)));
-  //connect( tree, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(openEditor(const QModelIndex &)));
-  
   connect( model, SIGNAL(touchModel()), this, SLOT(modelTouched()));
   connect( model, SIGNAL(gotoBookmark(BaseXMLNode*)), this, SLOT(showFounded(BaseXMLNode*)) );
 
@@ -444,24 +440,4 @@ void MainWindow::expandAll ()
 {
     tree->expandAll();
     resizeTreeColumns();
-}
-void MainWindow::openEditor(const QModelIndex & index)
-{
-  //TextDialog* dialog = new TextDialog(this);
-  //dialog->setCurrentIndex(index);
-  //dialog->exec();
-  
-  BaseXMLNode *item = static_cast<BaseXMLNode *>(index.internalPointer());
-  qDebug() << index.data( Qt::DisplayRole )<< item->editorActivated;
-  if (item->editorActivated)
-    {
-		//item->setData()
-		item->editorActivated = false;
-		tree->closePersistentEditor(index);
-    }
-  else
-    {
-		item->editorActivated = true;
-		tree->openPersistentEditor(index);
-	};
 }

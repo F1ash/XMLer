@@ -7,7 +7,6 @@
    Description:
 */
 #include "attrxmlnode.h"
-#include <QDebug>
 
 AttrXMLNode::AttrXMLNode (BaseXMLNode *parent):
   BaseXMLNode(parent)
@@ -27,17 +26,14 @@ AttrXMLNode::~AttrXMLNode ()
 void AttrXMLNode::setNamespaceURI( const QString &uri )
 {
   _namespaceURI = uri;
-  qDebug()<< uri << " <-- uri::Attr";
 }
 void AttrXMLNode::setLocalName( const QString &ln )
 {
   _localName = ln;
-  qDebug()<< ln << " <-- ln::Attr";
 }
 void AttrXMLNode::setQName( const QString &qn )
 {
   _qName = qn;
-  qDebug()<< qn << " <-- qn::Attr";
 }
 
 quint32 AttrXMLNode::childCount() const

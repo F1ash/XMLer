@@ -56,8 +56,7 @@ set (HEADERS
   src/attrxmlnode.h
   src/dataxmlnode.h
   src/urldialog.h
-  src/xmlerloadurlthread.h
-  src/textdialog.h)
+  src/xmlerloadurlthread.h)
 set (SOURCES 
   main.cpp 
   src/xmlerapplication.cpp
@@ -78,8 +77,7 @@ set (SOURCES
   src/attrxmlnode.cpp
   src/dataxmlnode.cpp
   src/urldialog.cpp
-  src/xmlerloadurlthread.cpp
-  src/textdialog.cpp)
+  src/xmlerloadurlthread.cpp)
 set (FORMS 
   forms/mainwindow.ui
   forms/documentpropertiesdialog.ui)

@@ -7,7 +7,6 @@
    Description:
 */
 #include "elementxmlnode.h"
-#include <QDebug>
 
 ElementXMLNode::ElementXMLNode (BaseXMLNode *parent):
   BaseXMLNode(parent)
@@ -25,17 +24,14 @@ ElementXMLNode::~ElementXMLNode ()
 void ElementXMLNode::setNamespaceURI( const QString &uri )
 {
   _namespaceURI = uri;
-  qDebug()<< uri << " <-- uri::Elem";
 }
 void ElementXMLNode::setLocalName( const QString &ln )
 {
   _localName = ln;
-  qDebug()<< ln << " <-- ln::Elem";
 }
 void ElementXMLNode::setQName( const QString &qn )
 {
   _qName = qn;
-  qDebug()<< qn << " <-- qn::Elem";
 }
 void ElementXMLNode::appendChild( BaseXMLNode *child )
 {

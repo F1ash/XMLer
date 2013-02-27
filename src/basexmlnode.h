@@ -21,7 +21,6 @@ public:
 
   explicit BaseXMLNode(BaseXMLNode *parent = 0);
   ~BaseXMLNode();
-  bool editorActivated;
 
   void setParentNode(BaseXMLNode *p = 0);
   BaseXMLNode *parentNode() const;
@@ -34,11 +33,6 @@ public:
   BaseXMLNode *childItemAt( int index ) const;                  // return child item at index
   qint64 size () const;                                         // return all child count
 
-  void setQName (const QString &qn);
-  void setLocalName (const QString &ln);
-  void setNamespaceURI (const QString &uri);
-  void setCheckState (Qt::CheckState state);
-
   /* Virtuals */
   virtual quint32 childCount() const;                           // return child count
   virtual QList<BaseXMLNode *> childs() const;                  // return all childs (elements and attributes)
@@ -46,15 +40,14 @@ public:
   virtual QString name () const;                                // return display name of node
   virtual QString qName () const;                               // return qName
   virtual QString namespaceURI () const;                        // return namespace URI
-  virtual Qt::CheckState checkState () const;
+
+  virtual void setQName (const QString &qn);
+  virtual void setLocalName (const QString &ln);
+  virtual void setNamespaceURI (const QString &uri);
 
 private:
   BaseXMLNode *_parentNode;
   BaseXMLNode::XMLNodeType _nodeType;
-  QString _qName;
-  QString _localName;
-  QString _namespaceURI;
-  Qt::CheckState _checkState;
 
 protected:
   void setNodeType(XMLNodeType nt);

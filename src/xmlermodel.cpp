@@ -7,7 +7,6 @@
    Description:
 */
 #include "xmlermodel.h"
-#include <QDebug>
 
 XMLerModel::XMLerModel (QObject *parent):
   QAbstractItemModel(parent)
@@ -157,7 +156,7 @@ void XMLerModel::bookmarkToggle ( const QModelIndex &index )
 Qt::ItemFlags XMLerModel::flags(const QModelIndex &index) const
 {
   //Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
-  Qt::ItemFlags defaultFlags = (Qt::ItemIsEnabled|Qt::ItemIsEditable|Qt::ItemIsUserCheckable);
+  Qt::ItemFlags defaultFlags = (Qt::ItemIsEnabled|Qt::ItemIsEditable);
   return defaultFlags;
 }
 int XMLerModel::columnCount(const QModelIndex &parent) const
@@ -249,11 +248,6 @@ QVariant XMLerModel::data(const QModelIndex &index, int role) const
     else if ( index.column() == 1 )
         return stateNodeIcon( item );
   }
-  else if ( role == Qt::CheckStateRole ) {
-    if ( index.column() == 0 )
-        return item->checkState();
-    else return QVariant();
-  }
   /* CLEANIT: not needed more
   else if ( role == Qt::BackgroundRole ) {
     if ( foundedNodes.contains ( item ) )
@@ -281,15 +275,15 @@ int XMLerModel::rowCount(const QModelIndex &parent) const
 bool XMLerModel::setData( const QModelIndex & index, const QVariant & value, int role = Qt::EditRole )
 {
   if ( !index.isValid() )
-	{qDebug()<< "index fail";
+  {
     return false;
-	};
+  };
 
   BaseXMLNode *item = static_cast<BaseXMLNode *>(index.internalPointer());
   if ( !item )
-	{qDebug()<< "item fail";
+  {
     return false;
-	};
+  };
 
   if ( role == Qt::EditRole ){
     switch( index.column() ) {
@@ -305,20 +299,9 @@ bool XMLerModel::setData( const QModelIndex & index, const QVariant & value, int
     default:
       break;
     }
-  }
-  else if ( role == Qt::CheckStateRole ) {
-    if ( index.column() == 0 ) {
-      Qt::CheckState state;
-      if (value.toInt()) state = Qt::Checked;
-      else state = Qt::Unchecked;
-      item->setCheckState ( state );
-      }
-    else return false;
   };
   
-  qDebug()<< value.toString() << index.column() << index.data()<< role;
   emit dataChanged(index.parent(), index.child(1,1));
-  qDebug()<< item->qName()<< item->name()<< item->namespaceURI()<< item->checkState()<<"::xml";
   return true;
 }
 /* Self private */

@@ -7,7 +7,6 @@
    Description:
 */
 #include "dataxmlnode.h"
-#include <QDebug>
 
 DataXMLNode::DataXMLNode (BaseXMLNode *parent):
   BaseXMLNode(parent)
@@ -26,27 +25,22 @@ DataXMLNode::~DataXMLNode ()
 void DataXMLNode::setNamespaceURI( const QString &uri )
 {
   _namespaceURI = uri;
-  qDebug()<< uri << " <-- uri::Data";
 }
 void DataXMLNode::setLocalName( const QString &ln )
 {
   _localName = ln;
-  qDebug()<< ln << " <-- uri::Data";
 }
 void DataXMLNode::setQName( const QString &qn )
 {
   _qName = qn;
-  qDebug()<< qn << " <-- qn::Data";
 }
 
 void DataXMLNode::setData ( const QString &d )
 {
-  qDebug()<< "set data in DataXMLNode: "<< d;
   _data = d;
 }
 QString DataXMLNode::data () const
 {
-  //qDebug()<< "data -->"<< _data;
   return _data;
 }
 
