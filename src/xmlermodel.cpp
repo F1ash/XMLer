@@ -157,7 +157,7 @@ void XMLerModel::bookmarkToggle ( const QModelIndex &index )
 Qt::ItemFlags XMLerModel::flags(const QModelIndex &index) const
 {
   //Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
-  Qt::ItemFlags defaultFlags = (Qt::ItemIsEditable|Qt::ItemIsEnabled|Qt::ItemIsUserCheckable);
+  Qt::ItemFlags defaultFlags = (Qt::ItemIsEnabled|Qt::ItemIsEditable|Qt::ItemIsUserCheckable);
   return defaultFlags;
 }
 int XMLerModel::columnCount(const QModelIndex &parent) const
@@ -228,7 +228,7 @@ QVariant XMLerModel::data(const QModelIndex &index, int role) const
   if ( !item )
     return QVariant();
 
-  if ( role == Qt::DisplayRole ) {
+  if ( role == Qt::DisplayRole or role == Qt::EditRole ) {
     switch( index.column() ) {
     case 2:
       return item->name();
@@ -294,13 +294,13 @@ bool XMLerModel::setData( const QModelIndex & index, const QVariant & value, int
   if ( role == Qt::EditRole ){
     switch( index.column() ) {
     case 0:
-      item->_qName = value.toString();
+      item->setQName ( QString().append(value.toString()) );
       break;
     case 2:
-      item->_name = value.toString();
+      item->setLocalName ( QString().append(value.toString()) );
       break;
     case 3:
-      item->_namespaceURI = value.toString();
+      item->setNamespaceURI ( QString().append(value.toString()) );
       break;
     default:
       break;
@@ -311,14 +311,14 @@ bool XMLerModel::setData( const QModelIndex & index, const QVariant & value, int
       Qt::CheckState state;
       if (value.toInt()) state = Qt::Checked;
       else state = Qt::Unchecked;
-      item->_checkState = state;
+      item->setCheckState ( state );
       }
     else return false;
   };
   
-  qDebug()<< value.toString() << index.column() << index.data();
-  qDebug()<< item->_qName<< item->_name<< item->_namespaceURI<< item->_checkState;
+  qDebug()<< value.toString() << index.column() << index.data()<< role;
   emit dataChanged(index.parent(), index.child(1,1));
+  qDebug()<< item->qName()<< item->name()<< item->namespaceURI()<< item->checkState()<<"::xml";
   return true;
 }
 /* Self private */

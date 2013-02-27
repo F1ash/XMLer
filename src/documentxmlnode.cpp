@@ -7,6 +7,7 @@
    Description:
 */
 #include "documentxmlnode.h"
+#include <QDebug>
 
 DocumentXMLNode::DocumentXMLNode ():
   BaseXMLNode(0)
@@ -121,9 +122,25 @@ QString DocumentXMLNode::name () const
 }
 QString DocumentXMLNode::qName () const
 {
-  return QString();
+  return _qName;
 }
 QString DocumentXMLNode::namespaceURI () const
 {
-  return QString();
+  return _namespaceURI;
+}
+
+void DocumentXMLNode::setNamespaceURI( const QString &uri )
+{
+  _namespaceURI = uri;
+  qDebug()<< uri << " <-- uri::Doc";
+}
+void DocumentXMLNode::setLocalName( const QString &ln )
+{
+  _localName = ln;
+  qDebug()<< ln << " <-- ln::Doc";
+}
+void DocumentXMLNode::setQName( const QString &qn )
+{
+  _qName = qn;
+  qDebug()<< qn << " <-- qn::Doc";
 }

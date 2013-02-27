@@ -33,6 +33,10 @@ public:
   QString name () const;
   QString qName () const;
   QString namespaceURI () const;
+  
+  void setNamespaceURI( const QString &uri );
+  void setLocalName( const QString &ln );
+  void setQName( const QString &qn );
 
   /* Self */
   BaseXMLNode *documentNode() const;
@@ -68,7 +72,10 @@ private:
 
   QTextCodec *_codec;
   QString _version;
-  
+
+  QString _namespaceURI;
+  QString _localName;
+  QString _qName;
 
   /* processing instruction */
   QMap<QString,QString> _processingInstructions;

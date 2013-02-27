@@ -7,16 +7,18 @@
    Description:
 */
 #include "basexmlnode.h"
+#include <QDebug>
 
 BaseXMLNode::BaseXMLNode (BaseXMLNode *parent):
   QObject(parent)
 {
   setParentNode(parent);
   setNodeType(BaseXMLNode::Unknown);
-  _name = QString();
   _qName = QString();
+  _localName = QString();
   _namespaceURI = QString();
   _checkState = Qt::Checked;
+  editorActivated = false;
 }
 
 BaseXMLNode::~BaseXMLNode ()
@@ -127,7 +129,7 @@ void BaseXMLNode::appendChild(BaseXMLNode *child)
 QString BaseXMLNode::name () const
 {
   //return QString(); // return empty string
-  return _name;
+  return _localName;
 }
 QString BaseXMLNode::qName () const
 {
@@ -141,5 +143,25 @@ QString BaseXMLNode::namespaceURI () const
 }
 Qt::CheckState BaseXMLNode::checkState () const
 {
-	return _checkState;
+  return _checkState;
+}
+void BaseXMLNode::setLocalName (const QString &ln)
+{
+  _localName = ln;
+  qDebug()<< ln << " <-- ln::Base";
+}
+void BaseXMLNode::setQName (const QString &qn)
+{
+  _qName = qn;
+  qDebug()<< qn << " <-- qn::Base";
+}
+void BaseXMLNode::setNamespaceURI (const QString &uri)
+{
+  _namespaceURI = uri;
+  qDebug()<< uri << " <-- uri::Base";
+}
+void BaseXMLNode::setCheckState (Qt::CheckState state)
+{
+  _checkState = state;
+  qDebug()<< state << " <-- state::Base";
 }

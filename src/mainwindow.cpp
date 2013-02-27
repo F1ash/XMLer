@@ -447,8 +447,21 @@ void MainWindow::expandAll ()
 }
 void MainWindow::openEditor(const QModelIndex & index)
 {
-  qDebug() << index.data( Qt::DisplayRole );
-  TextDialog* dialog = new TextDialog(this);
-  dialog->setCurrentIndex(index);
-  dialog->exec();
+  //TextDialog* dialog = new TextDialog(this);
+  //dialog->setCurrentIndex(index);
+  //dialog->exec();
+  
+  BaseXMLNode *item = static_cast<BaseXMLNode *>(index.internalPointer());
+  qDebug() << index.data( Qt::DisplayRole )<< item->editorActivated;
+  if (item->editorActivated)
+    {
+		//item->setData()
+		item->editorActivated = false;
+		tree->closePersistentEditor(index);
+    }
+  else
+    {
+		item->editorActivated = true;
+		tree->openPersistentEditor(index);
+	};
 }

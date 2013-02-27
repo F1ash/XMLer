@@ -18,6 +18,10 @@ public:
   explicit DataXMLNode(BaseXMLNode *parent = 0);
   ~DataXMLNode();
 
+  void setNamespaceURI( const QString &uri );
+  void setLocalName( const QString &ln );
+  void setQName( const QString &qn );
+
   void setData ( const QString &d );
   QString data() const;
 
@@ -30,6 +34,9 @@ public:
   
 private:
   QString _data;
+  QString _namespaceURI;
+  QString _localName;
+  QString _qName;
 };
 
 #endif
