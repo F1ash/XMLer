@@ -37,6 +37,8 @@ public:
   virtual quint32 childCount() const;                           // return child count
   virtual QList<BaseXMLNode *> childs() const;                  // return all childs (elements and attributes)
   virtual void appendChild(BaseXMLNode *child);                 // add child to this object
+  virtual void insertChild(int i, BaseXMLNode *child);          // insert child into row
+  virtual void removeChildAt(int i);                            // remove child at row
   virtual QString name () const;                                // return display name of node
   virtual QString qName () const;                               // return qName
   virtual QString namespaceURI () const;                        // return namespace URI

@@ -27,6 +27,7 @@
 #include "xmlerfindwidget.h"
 #include "urldialog.h"
 #include "xmlerloadurlthread.h"
+#include "contextmenu.h"
 
 namespace Ui {
   class MainWindow;
@@ -108,6 +109,9 @@ private slots:
 
   void collapseAll();
   void expandAll();
+  
+  /* context menu slots */
+  void showContextMenu(const QPoint&);
 };
 
 #endif

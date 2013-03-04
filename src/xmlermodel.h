@@ -13,11 +13,17 @@
 
 #include <QAbstractItemModel>
 #include <QBrush>
+#include <QMimeData>
+#include <QDomDocument>
+#include <QDomElement>
+#include <QDomNode>
 #include "basexmlnode.h"
 #include "documentxmlnode.h"
 #include "xmlerloadfilethread.h"
 #include "xmlersavefilethread.h"
 #include "xmlerfindthread.h"
+
+#define DRAG_AND_DROP_MIME QString("application/*")
 
 class XMLerModel : public QAbstractItemModel
 {
@@ -54,6 +60,14 @@ public:
   QVariant data(const QModelIndex &index, int role) const;
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   bool setData( const QModelIndex & index, const QVariant & value, int role);
+  bool insertRow(int row, const QModelIndex &parent = QModelIndex());
+  bool removeRow(int row, const QModelIndex &parent = QModelIndex());
+  bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+
+  Qt::DropActions supportedDropActions() const;
+  QStringList mimeTypes() const;
+  QMimeData *mimeData(const QModelIndexList &indexes) const;
+  bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent = QModelIndex());
 
 private:
   DocumentXMLNode *_document;
@@ -73,6 +87,8 @@ private:
 
   QIcon stateNodeIcon(BaseXMLNode *node) const;
   void safeUpdateBookmarkIndex ();
+  QByteArray indexesToXML(const QModelIndexList &indexes) const;
+  QDomElement convertItemToDomElement(BaseXMLNode *item, QDomDocument &doc) const;
 
 signals:
   void touchModel ();

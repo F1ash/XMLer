@@ -29,6 +29,8 @@ public:
   void appendAttributes( const QXmlAttributes &attr );
 
   void appendChild ( BaseXMLNode *child );
+  void insertChild(int i, BaseXMLNode *child);          // insert child into row
+  void removeChildAt(int i);                            // remove child at row
   quint32 childCount() const;
   XMLNodePtrList childs() const;
   QString name () const;

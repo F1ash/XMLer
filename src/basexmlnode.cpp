@@ -120,6 +120,12 @@ void BaseXMLNode::appendChild(BaseXMLNode *child)
 {
   // do nothing
 }
+void BaseXMLNode::insertChild(int i, BaseXMLNode *child)
+{
+}
+void BaseXMLNode::removeChildAt(int i)
+{
+}
 QString BaseXMLNode::name () const
 {
   return QString(); // return empty string

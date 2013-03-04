@@ -8,6 +8,7 @@
 */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDebug>
 
 MainWindow::MainWindow (QWidget *parent, Qt::WindowFlags f) :
   QMainWindow(parent, f),
@@ -122,10 +123,15 @@ void MainWindow::initialTree()
   tree->setModel( model );
   tree->setRootIsDecorated( false );
   tree->setEditTriggers(QAbstractItemView::DoubleClicked);
+  tree->setDragDropMode ( QAbstractItemView::DragDrop );
+  tree->setDropIndicatorShown ( true );
+  tree->setContextMenuPolicy(Qt::CustomContextMenu);
 
   /* tree signals */
   connect ( tree, SIGNAL(collapsed(QModelIndex)), this, SLOT(indexCollapsed(QModelIndex)) );
   connect ( tree, SIGNAL(expanded(QModelIndex)), this, SLOT(indexExpanded(QModelIndex)) );
+
+  connect ( tree, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(showContextMenu(const QPoint&)) );
 
   connect( model, SIGNAL(touchModel()), this, SLOT(modelTouched()));
   connect( model, SIGNAL(gotoBookmark(BaseXMLNode*)), this, SLOT(showFounded(BaseXMLNode*)) );
@@ -440,4 +446,19 @@ void MainWindow::expandAll ()
 {
     tree->expandAll();
     resizeTreeColumns();
+}
+void MainWindow::showContextMenu(const QPoint& pos)
+{
+	QModelIndex index = tree->indexAt(pos);
+	if (index.isValid())
+		{
+			DataXMLNode *item = static_cast<DataXMLNode *>(index.internalPointer());
+			qDebug()<<"LN  :"<<item->name().toLocal8Bit().data();
+			qDebug()<<"QN  :"<<item->qName().toLocal8Bit().data();
+			qDebug()<<"URI :"<<item->namespaceURI().toLocal8Bit().data();
+			qDebug()<<"DATA:"<<item->data().toLocal8Bit().data();
+			qDebug()<<pos;
+			ContextMenu* menu = new ContextMenu(tree, index, model);
+			menu->popup(this->mapToGlobal(pos));
+		};
 }

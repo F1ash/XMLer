@@ -38,6 +38,14 @@ void ElementXMLNode::appendChild( BaseXMLNode *child )
   if ( child )
     _childs.append( child );
 }
+void ElementXMLNode::insertChild(int i, BaseXMLNode *child)
+{
+  _childs.insert(i, child);
+}
+void ElementXMLNode::removeChildAt(int i)
+{
+  _childs.removeAt(i);
+}
 quint32 ElementXMLNode::childCount() const
 {
   return _childs.count();

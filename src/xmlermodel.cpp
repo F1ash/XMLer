@@ -156,7 +156,20 @@ void XMLerModel::bookmarkToggle ( const QModelIndex &index )
 Qt::ItemFlags XMLerModel::flags(const QModelIndex &index) const
 {
   Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
-  Qt::ItemFlags flags = (defaultFlags | Qt::ItemIsEditable);
+  if ( !index.isValid() )
+    return defaultFlags;
+
+  BaseXMLNode *item = static_cast<BaseXMLNode *>(index.internalPointer());
+  if ( !item )
+    return defaultFlags;
+  Qt::ItemFlags flags;
+  if ( this->index(0,0)==index or \
+       this->index(0,1)==index or \
+       this->index(0,2)==index or \
+       this->index(0,3)==index )
+    flags = (defaultFlags | Qt::ItemIsEditable | Qt::ItemIsDropEnabled);
+  else
+    flags = (defaultFlags | Qt::ItemIsEditable | Qt::ItemIsDropEnabled | Qt::ItemIsDragEnabled);
   return flags;
 }
 int XMLerModel::columnCount(const QModelIndex &parent) const
@@ -405,4 +418,170 @@ void XMLerModel::bookmarkPrev ()
         bookmark_current_position = bookmarkNodes.size() - 1;
 
     emit gotoBookmark ( bookmarkNodes.at( bookmark_current_position ) );
+}
+
+/* edit tree */
+bool XMLerModel::insertRow(int row, const QModelIndex &parent)
+{
+    BaseXMLNode *parentItem;
+    if ( parent.isValid() )
+        parentItem = static_cast<BaseXMLNode *>(parent.internalPointer());
+    else
+        parentItem = _rootItem;
+    if ( !parentItem )
+        parentItem = _rootItem;
+
+    if (row == -1) row = parentItem->size()+1;
+    beginInsertRows(parent, row, row);
+
+    BaseXMLNode *newItem = new BaseXMLNode(parentItem);
+
+    parentItem->insertChild(row, newItem);
+
+    endInsertRows();
+    emit dataChanged(parent, parent.child(0, parentItem->childCount()));
+    return true;
+}
+bool XMLerModel::removeRow(int row, const QModelIndex &parent)
+{
+    beginRemoveRows(parent, row, row);
+    BaseXMLNode *pitem;
+
+    if ( !parent.isValid() )
+        pitem = _rootItem;
+    else
+        pitem = static_cast<BaseXMLNode *>(parent.internalPointer());
+
+    if ( !pitem )
+        pitem = _rootItem;
+
+    pitem->removeChildAt(row);
+    endRemoveRows();
+    emit dataChanged(parent, parent.child(0, pitem->childCount()));
+
+    return true;
+}
+bool XMLerModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    bool result = true;
+    for ( int i = row; i < row+count; i++ )
+        result &= removeRow(i, parent);
+
+    return result;
+}
+
+// drag & drop
+Qt::DropActions XMLerModel::supportedDropActions() const
+{
+    return Qt::CopyAction | Qt::MoveAction;
+}
+QStringList XMLerModel::mimeTypes() const
+{
+    QStringList types;
+    types << DRAG_AND_DROP_MIME;
+    return types;
+}
+QDomElement XMLerModel::convertItemToDomElement(BaseXMLNode *item, QDomDocument &doc) const
+{
+    QDomElement itemElem;
+    itemElem = doc.createElement("item");
+    if ( item->childCount() ) {
+        for ( int i = 0; i < item->childCount(); i++ ) {
+            QDomElement childElem = convertItemToDomElement(item->childItemAt(i), doc);
+            itemElem.appendChild(childElem);
+        }
+    }
+    else {
+        itemElem.setAttribute("QName", item->qName());
+        itemElem.setAttribute("LocalName", item->name());
+        itemElem.setAttribute("URI", item->namespaceURI());
+    }
+
+    return itemElem;
+}
+QByteArray XMLerModel::indexesToXML(const QModelIndexList &indexes) const
+{
+    QDomDocument doc;
+    QDomElement	root = doc.createElement( "new_item" );
+
+    doc.appendChild( root );
+
+    foreach(QModelIndex idx, indexes) {
+        if ( !idx.isValid() )
+            continue;
+        if ( idx.column() != 0 )
+            continue;
+
+        BaseXMLNode *item = static_cast<BaseXMLNode *>(idx.internalPointer());
+        if ( !item )
+            continue;
+
+        QDomElement child = convertItemToDomElement(item, doc);
+        root.appendChild(child);
+    }
+
+    QByteArray clearBuffer;
+    QBuffer clearFile ( &clearBuffer );
+    if ( !clearFile.open( QIODevice::WriteOnly | QIODevice::Text ) )
+        return QByteArray();
+
+    QTextStream clearStream(&clearFile);
+    doc.save(clearStream, 4);
+    clearFile.close();
+
+    return clearBuffer;
+}
+QMimeData *XMLerModel::mimeData(const QModelIndexList &indexes) const
+{
+    QMimeData *mimeData = new QMimeData();
+    QByteArray encodedData = indexesToXML(indexes);
+
+    mimeData->setData(DRAG_AND_DROP_MIME, encodedData);
+    return mimeData;
+}
+bool XMLerModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
+                               int row, int column, const QModelIndex &parent)
+{
+    Q_UNUSED(column)
+    if ( action == Qt::IgnoreAction )
+        return true;
+
+    if ( !data->hasFormat(DRAG_AND_DROP_MIME) )
+        return false;
+
+
+    BaseXMLNode *parentItem;
+    int beginRow = row;
+    if ( row == -1 && parent.isValid() )
+        beginRow = rowCount(parent);
+    else if ( row == -1 )
+        beginRow = rowCount();
+
+    if ( !parent.isValid() )
+        parentItem = _rootItem;
+    else {
+        parentItem = static_cast<BaseXMLNode *>(parent.internalPointer());
+        if ( !parentItem )
+            parentItem = _rootItem;
+    }
+
+    QByteArray buf = data->data(DRAG_AND_DROP_MIME);
+    QDomDocument doc;
+    if ( !doc.setContent(buf) )
+        return false;
+
+
+    QDomElement rootElement = doc.documentElement();
+    if ( rootElement.tagName() != "new_item" )
+        return false;
+
+    for(QDomNode n = rootElement.firstChild(); !n.isNull(); n = n.nextSibling())
+    {
+        if ( n.isElement() )
+            //parseElementForDND( beginRow, parent, n.toElement() );
+            true;
+    }
+
+    emit dataChanged(parent, parent);
+    return true;
 }
